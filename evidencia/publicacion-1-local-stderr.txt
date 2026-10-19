@@ -1,0 +1,2 @@
+connecting to 127.0.0.1:10547... ok.
+publishing to ws://127.0.0.1:10547... success.

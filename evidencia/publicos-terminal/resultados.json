@@ -1,0 +1,91 @@
+{
+  "started_at": "2026-10-19T21:34:39.240Z",
+  "relay_type": "Khatru local; no es strfry ni relay del instructor",
+  "relays": {
+    "damus": {
+      "url": "wss://relay.damus.io",
+      "publish1": {
+        "code": 0,
+        "timedOut": false,
+        "response": "connecting to relay.damus.io... ok.\npublishing to relay.damus.io... success.",
+        "accepted": true
+      },
+      "query1": {
+        "code": 0,
+        "timedOut": false,
+        "returned": true,
+        "response": "connecting to relay.damus.io... ok."
+      },
+      "publish2": {
+        "code": 0,
+        "timedOut": false,
+        "response": "connecting to relay.damus.io... ok.\npublishing to relay.damus.io... success.",
+        "accepted": true
+      },
+      "query2": {
+        "code": 0,
+        "timedOut": false,
+        "returned": true,
+        "response": "connecting to relay.damus.io... ok."
+      },
+      "query1-tras-ban": {
+        "code": 0,
+        "timedOut": false,
+        "returned": true,
+        "response": "connecting to relay.damus.io... ok."
+      }
+    },
+    "wine": {
+      "url": "wss://nostr.wine",
+      "publish1": {
+        "code": 123,
+        "timedOut": false,
+        "response": "connecting to nostr.wine... ok.\npublishing to nostr.wine... failed: msg: restricted: sign up at https://nostr.wine to write events to this relay\nfailed to publish to any of the relays",
+        "accepted": false
+      },
+      "query1": {
+        "code": 0,
+        "timedOut": false,
+        "returned": false,
+        "response": "connecting to nostr.wine... ok."
+      }
+    },
+    "noslol": {
+      "url": "wss://nos.lol",
+      "publish1": {
+        "code": 0,
+        "timedOut": false,
+        "response": "connecting to nos.lol... ok.\npublishing to nos.lol... success.",
+        "accepted": true
+      },
+      "query1": {
+        "code": 0,
+        "timedOut": false,
+        "returned": true,
+        "response": "connecting to nos.lol... ok."
+      },
+      "publish2": {
+        "code": 0,
+        "timedOut": false,
+        "response": "connecting to nos.lol... ok.\npublishing to nos.lol... success.",
+        "accepted": true
+      },
+      "query2": {
+        "code": 0,
+        "timedOut": false,
+        "returned": true,
+        "response": "connecting to nos.lol... ok."
+      },
+      "query1-tras-ban": {
+        "code": 0,
+        "timedOut": false,
+        "returned": true,
+        "response": "connecting to nos.lol... ok."
+      }
+    }
+  },
+  "id1": "7301a0eac00bcfa10a36dcb5ad3457150964b6539dc63ab3bcde297a2e669d3f",
+  "id2": "5756634e0c6809bf8ce07b81cce56760881497b0d319841b327364f533fa12b8",
+  "npub": "npub1qmwmgh6n3e8f4ek74cag0s3ef3xljqlfpuvk6utt8mmmz5ssjtyqrrgn28",
+  "ended_at": "2026-10-19T21:34:44.436Z"
+}

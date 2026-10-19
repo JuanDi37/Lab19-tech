@@ -1,0 +1,3 @@
+connecting to nostr.wine... ok.
+publishing to nostr.wine... failed: msg: restricted: sign up at https://nostr.wine to write events to this relay
+failed to publish to any of the relays

@@ -1,0 +1,2 @@
+connecting to nos.lol... An attempt was made to access a socket in a way forbidden by its access permissions.
+failed to connect to any of the given relays.

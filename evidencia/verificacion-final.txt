@@ -1,0 +1,6 @@
+PASS: dos eventos fijos, siete campos, autor y etiqueta exactos, hashes canónicos correctos.
+PASS: original y #2 verificadas; alterada invalid .id.
+PASS: aceptación y lectura local, rechazo de #2 por ban y lectura de nota 1 posterior.
+PASS: errores públicos registrados como conexión fallida; #2 nunca enviada a wine.
+PASS: cierre del relay y revisión de 88 archivos sin valores nsec.
+LIMITACIÓN: relays públicos sin conexión; Khatru local, no strfry del instructor.

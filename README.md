@@ -1,21 +1,35 @@
-# Lab 19 — guía para Windows / PowerShell
+# Lab 19 — ejecución y guía para Windows / PowerShell
 
-También puedes abrir [el informe HTML del trabajo](index.html): explica el propósito, la preparación, los fundamentos y los aprendizajes; incluye estos comandos y una opción de impresión / PDF.
+Carnet del estudiante: **20230285** · CS031 · Sesión 22
+
+**Resultado actual:** nota 1 aceptada y recuperada de damus, nos.lol y el relay local temporal a lo largo de las pruebas; nostr.wine la rechazó con `restricted: sign up at https://nostr.wine to write events to this relay`. Original válida y copia alterada inválida. #2 rechazada por el ban local y aceptada y recuperada en los dos abiertos. El [carnet](CARNET.md) contiene la tabla y la reflexión final; el [registro](ESTADO.md) explica el alcance.
+
+La continuación pública ya se ejecutó desde tu terminal a las 15:34 del 19 de octubre de 2026. **No vuelvas a publicar ni a generar notas o llaves para este lab.** Se reutilizaron exactamente `nota1.json` y `nota2.json`; los [resultados consolidados](evidencia/resultados-consolidados.json) enlazan las dos fases. Las respuestas originales están en `evidencia/publicos-terminal/` y la [captura de terminal](<evidencia/Screenshot 2026-10-19 153506.png>) fue revisada sin observar una llave privada.
+
+`nak` está instalado en `C:\Users\juanl\go\bin\nak.exe`. La CLI imprime `nak version debug`; los metadatos de Go identifican el módulo oficial `github.com/fiatjaf/nak v0.21.2`. El relay propio usa Khatru por solicitud del estudiante: no es strfry ni el relay del instructor. Docker no tenía motor activo y WSL devolvió acceso denegado. El instructor debe aceptar esta adaptación; después entrega el bloque del carnet en el enlace que indique.
+
+La llave de test fue descartada al terminar la prueba local; la publicación posterior no necesitó el secreto porque los JSON ya estaban firmados. El servidor local se detuvo y almacenaba en memoria. El conteo 3/4 reúne recuperaciones durante ambas fases, no presencia simultánea ni conservación permanente. El mensaje observado de wine pide registro y no menciona expresamente un pago.
+
+Lo siguiente conserva la guía manual para una sesión nueva. Los pasos de generación no deben repetirse sobre la ejecución ya documentada.
+
+Abre [el informe HTML final](index.html): incluye el carnet 20230285, la tabla de relays, los eventos firmados, los registros de verificación y ban, la captura incorporada y una opción de impresión / PDF. La guía manual para una sesión nueva permanece en este README.
 
 Sigue los bloques en orden, en la misma ventana de PowerShell. La llave la generas tú en clase y permanece en la memoria de esa ventana. Los archivos de evidencia contienen eventos públicos y respuestas, nunca la llave privada. Tiempo orientativo tras instalar `nak`: 3 + 7 + 8 + 7 + 5 minutos.
 
-El [estado real de la preparación](ESTADO.md) y la [plantilla del carnet](CARNET.md) distinguen los pasos pendientes. Todavía no se han ejecutado firmas ni publicaciones.
+El [estado real de la ejecución](ESTADO.md) y el [carnet con resultados](CARNET.md) documentan los resultados locales y públicos, incluida la adaptación del relay.
 
-## 0. Instalar desde Releases oficial
+## 0. Localizar nak; instalación solo si falta
 
-Esta terminal no pudo descargar desde GitHub. En tu navegador abre únicamente [Releases de fiatjaf/nak](https://github.com/fiatjaf/nak/releases/latest), despliega **Assets** y descarga el binario para **Windows amd64/x86_64**. Si viene comprimido, extrae `nak.exe`. Colócalo en `.tools/nak.exe` dentro de este proyecto. No descargues los archivos de código fuente pensando que son el ejecutable. No necesitas instalar Go si usas el binario oficial.
+La instalación ya está disponible en la carpeta `go/bin` del usuario. El bloque siguiente la localiza aunque el PATH de esta terminal no esté actualizado. Si en otro equipo falta, usa únicamente [Releases de fiatjaf/nak](https://github.com/fiatjaf/nak/releases/latest), descarga el ejecutable **Windows amd64/x86_64** y colócalo en `.tools/nak.exe`. No necesitas Go si usas el binario oficial.
 
 Abre PowerShell en esta carpeta y comprueba:
 
 ```powershell
 Set-Location -LiteralPath 'C:\Users\juanl\Documents\GitHub\Laboratorio 19'
-if (-not (Test-Path -LiteralPath '.\.tools\nak.exe')) { throw 'Falta .tools/nak.exe: descarga el binario oficial de Windows.' }
-Set-Alias -Name nak -Value (Resolve-Path -LiteralPath '.\.tools\nak.exe').Path
+$nakPath = Join-Path $env:USERPROFILE 'go\bin\nak.exe'
+if (-not (Test-Path -LiteralPath $nakPath)) { $nakPath = Join-Path $PWD.Path '.tools\nak.exe' }
+if (-not (Test-Path -LiteralPath $nakPath)) { throw 'Falta nak: instala desde el repositorio oficial.' }
+Set-Alias -Name nak -Value $nakPath
 nak --version
 if ($LASTEXITCODE -ne 0) { throw 'nak no funciona. Detente antes de generar la llave.' }
 New-Item -ItemType Directory -Path '.\evidencia' -Force | Out-Null

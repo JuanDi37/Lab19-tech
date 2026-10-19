@@ -1,37 +1,35 @@
-# Registro de preparación
+# Estado de ejecución — Lab 19
 
-Fecha: 2026-10-19.
+Carnet del estudiante: **20230285**
 
-| Comprobación | Resultado real |
+Fecha: 2026-10-19. Firma y ban local: 15:30 Guatemala. Continuación pública desde la terminal del estudiante: 15:34:39–15:34:44 Guatemala.
+
+Se completaron las observaciones públicas con exactamente los dos eventos firmados durante la prueba local. Nota 1 se recuperó de damus, nos.lol y del local temporal a lo largo de ambas pruebas; nostr.wine la rechazó explícitamente. Nota #2 fue rechazada por el ban local y aceptada y recuperada en ambos abiertos.
+
+| Comprobación | Resultado observado |
 | --- | --- |
-| Sistema | Windows x64; PowerShell 5.1.26100.9711 |
-| Repositorio al comenzar | Solo `.gitattributes`; árbol de trabajo limpio |
-| `nak` disponible en PATH | No |
-| Go disponible en PATH | No |
-| Descarga mediante PowerShell desde API oficial de GitHub | Falló: `Unable to connect to the remote server` |
-| Conexión con curl a Releases oficial | Falló: `curl: (7) Failed to connect to github.com:443` |
-| Consulta del repositorio oficial mediante navegador de investigación | Accesible; instrucciones y código consultados |
-| Documento de sesión de Google | No accesible con la herramienta; se trabajó con el enunciado pegado por el usuario |
-| Usuario en clase | Sí, confirmado por el usuario |
-| Generación de llave | La hará el usuario en su propia terminal, como solicitó |
-| URL del relay de clase | El usuario indica que no se proporciona |
-| Instalaciones realizadas | Ninguna |
-| Llaves generadas por el asistente | Ninguna |
-| Notas firmadas o publicadas por el asistente | Ninguna |
-| Resultados de relays / ban | Sin ejecutar; no se simularon respuestas |
-| Sintaxis de los 11 bloques PowerShell de README | Validada con el parser de PowerShell: 0 errores; sin ejecutar los bloques |
-| UTF-8 en pipeline a ejecutable nativo | Ida y vuelta del texto fijo comprobada con Node instalado: correcta |
-| Estructura JSON de la etiqueta en PowerShell 5.1 | Comprobada: un tag con dos elementos |
-| Formato del árbol de trabajo | `git diff --check` sin errores; archivos nuevos sin commit |
+| nak | Ruta go/bin/nak.exe del usuario; CLI nak version debug; metadatos oficiales github.com/fiatjaf/nak v0.21.2, Go 1.27.0 |
+| Firma original / #2 | Válidas, exit 0; siete campos, tipo 1, contenido y tag exactos, hash canónico comprobado |
+| Copia alterada | Solo local, prueba → pruebb; invalid .id, exit 123 |
+| Nota 1 en damus y nos.lol | Aceptada (success., exit 0), recuperada por ID y verificada |
+| Nota 1 en nostr.wine | Rechazada: restricted: sign up at https://nostr.wine to write events to this relay (exit 123); consulta completada sin eventos (exit 0) |
+| Nota 1 en local | Aceptada y recuperada antes y después del ban; firmas válidas |
+| Ban local | Aplicado a la misma llave pública a las 21:30:04.032 UTC, antes de firmar #2 |
+| Nota #2 en local | Rechazada: blocked: test pubkey banned on local lab relay (exit 123); consulta completada sin eventos (exit 0) |
+| Nota #2 en damus y nos.lol | Aceptada (success., exit 0), recuperada por ID y verificada después del ban local |
+| Nota 1 tras el ban, abiertos | Recuperada y verificada en damus y nos.lol; no hay lectura pública previa al ban en esta evidencia |
+| Captura | Screenshot 2026-10-19 153506.png revisada visualmente: coincide con respuestas guardadas; sin llave privada visible |
+| Llave y límites | Solo en memoria durante firma; proceso terminado; dos eventos, sin pagos, scraping ni evasión de bans públicos |
+| Relay propio | Khatru en ws://127.0.0.1:10547, almacenamiento temporal en memoria; detenido antes de continuar en públicos |
+| Adaptación | Solicitada por estudiante; no es strfry ni relay del instructor. Docker sin motor y WSL denegado en la sesión original |
+| Intentos iniciales | Bloqueados por permisos de socket del entorno; se conservaron en evidencia/resultados.json como historial |
+| Documento de sesión | Google Doc no accesible durante la preparación; se siguió el enunciado compartido |
+| Entrega | Carnet e informe actualizados; pendiente enviar al link de carnet no proporcionado y aceptación docente de la adaptación |
 
-La falta de endpoint impide ejecutar la cuarta fila y probar el ban de clase. Un fallo de conexión no demuestra un rechazo por política. Informar al instructor y pedirle el endpoint o una adaptación explícita del ejercicio; no reemplazarlo por otro relay ni afirmar que hubo un ban.
+[Resultados consolidados](evidencia/resultados-consolidados.json) · [Respuestas públicas originales](evidencia/publicos-terminal/resultados.json) · [Captura](<evidencia/Screenshot 2026-10-19 153506.png>) · [Verificación pública](evidencia/verificacion-publicos.txt).
 
-La guía está preparada para ejecutar manualmente los pasos en la misma terminal. La instalación y las verificaciones con `nak` aún requieren ejecución real; revisar sintaxis no demuestra conectividad, firmas ni aceptación por los relays.
+La auditoría comparó cada respuesta de publicación con stderr y códigos originales, comprobó la igualdad de los seis eventos recuperados de abiertos con los JSON firmados y ejecutó nuevamente nak verify sobre esos seis eventos y las dos originales: exit 0. No se hicieron publicaciones ni consultas nuevas durante esta revisión. Los logs originales del primer intento se conservan sin modificar.
 
-## Informe HTML
+El conteo 3/4 describe recuperaciones observadas a lo largo de dos ejecuciones; no afirma almacenamiento simultáneo ni permanente. El mensaje de wine exige registro y no menciona expresamente pago. No hay pasos públicos pendientes ni se debe volver a ejecutar --publicos.
 
-Se creó `index.html` como informe local en español con estilos integrados, navegación, explicación del trabajo, fundamentos, aprendizajes, tabla de pendientes, criterios de evaluación y los 11 bloques exactos de README. Incluye una demostración didáctica del hash del texto y una opción de impresión / PDF; no genera llaves ni se conecta a relays.
-
-Comprobaciones realizadas con Node ya instalado: estructura y cierre de etiquetas, IDs y enlaces internos, archivos enlazados, ausencia de dependencias externas, coincidencia de los 11 bloques, sintaxis JavaScript y comportamiento de los controles en un DOM simulado. Los hashes de ambos textos coincidieron con SHA-256 de Node; se verificaron el retorno al original, la alternativa sin Web Crypto y la apertura/restauración de los comandos al imprimir.
-
-Se intentó obtener una captura con Chrome y Edge en modo headless. Ambos procesos terminaron con código `-2147483645`, sin generar la captura. No se comprobó visualmente el renderizado ni la salida PDF en este entorno.
+Informe final: index.html identifica el carnet 20230285 e incorpora la captura PNG original, los dos eventos firmados y los registros esenciales dentro del archivo. La guía manual se conserva en README. Se verificaron la estructura, los enlaces, la igualdad de la captura incorporada con el PNG original y los controles de hash e impresión mediante DOM simulado. No se comprobó visualmente el renderizado en un navegador.

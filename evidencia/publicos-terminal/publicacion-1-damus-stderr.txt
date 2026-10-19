@@ -1,0 +1,2 @@
+connecting to relay.damus.io... ok.
+publishing to relay.damus.io... success.

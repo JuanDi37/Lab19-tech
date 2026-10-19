@@ -1,0 +1,9 @@
+PASS: IDs y npub idénticos a la ejecución local.
+PASS: respuestas de publicación coinciden con stderr y códigos guardados.
+PASS: 6 eventos recuperados de abiertos coinciden campo por campo con las notas firmadas.
+PASS: nak verify de esos 6 eventos y ambas originales: exit 0.
+PASS: wine rechazó nota 1 con restricted: sign up; consulta terminó sin eventos.
+PASS: las publicaciones públicas ocurrieron después del ban local.
+PASS: exactamente dos IDs publicados; #2 no enviada a wine.
+Captura revisada visualmente: resultados públicos, sin llave privada visible.
+Alcance: 3/4 relays observados a lo largo de dos ejecuciones; local temporal detenido.

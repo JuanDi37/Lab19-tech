@@ -1,0 +1,3 @@
+2026/10/19 15:30:02 Listening on ws://127.0.0.1:10547; storage in memory; ban policy: relay-local/banned-pubkey.txt
+2026/10/19 15:30:03 {"id":"7301a0eac00bcfa10a36dcb5ad3457150964b6539dc63ab3bcde297a2e669d3f","pubkey":"06ddb45f538e4e9ae6deae3a87c2394c4df903e90f196d716b3ef7b1521092c8","reason":"","rejected":false,"time":"2026-10-19T21:30:03.5908222Z"}
+2026/10/19 15:30:04 {"id":"5756634e0c6809bf8ce07b81cce56760881497b0d319841b327364f533fa12b8","pubkey":"06ddb45f538e4e9ae6deae3a87c2394c4df903e90f196d716b3ef7b1521092c8","reason":"blocked: test pubkey banned on local lab relay","rejected":true,"time":"2026-10-19T21:30:04.5439064Z"}

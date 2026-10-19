@@ -1,0 +1,2 @@
+connecting to nos.lol... ok.
+publishing to nos.lol... success.

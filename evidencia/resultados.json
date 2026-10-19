@@ -1,0 +1,139 @@
+{
+  "started_at": "2026-10-19T21:30:02.216Z",
+  "relay_type": "Khatru local; no es strfry ni relay del instructor",
+  "relays": {
+    "local": {
+      "url": "ws://127.0.0.1:10547",
+      "publish1": {
+        "code": 0,
+        "timedOut": false,
+        "response": "connecting to 127.0.0.1:10547... ok.\npublishing to ws://127.0.0.1:10547... success.",
+        "accepted": true
+      },
+      "query1": {
+        "code": 0,
+        "timedOut": false,
+        "returned": true,
+        "response": "connecting to 127.0.0.1:10547... ok."
+      },
+      "publish2": {
+        "code": 123,
+        "timedOut": false,
+        "response": "connecting to 127.0.0.1:10547... ok.\npublishing to ws://127.0.0.1:10547... failed: msg: blocked: test pubkey banned on local lab relay\nfailed to publish to any of the relays",
+        "accepted": false
+      },
+      "query2": {
+        "code": 0,
+        "timedOut": false,
+        "returned": false,
+        "response": "connecting to 127.0.0.1:10547... ok."
+      },
+      "query1-tras-ban": {
+        "code": 0,
+        "timedOut": false,
+        "returned": true,
+        "response": "connecting to 127.0.0.1:10547... ok."
+      }
+    },
+    "noslol": {
+      "url": "wss://nos.lol",
+      "publish1": {
+        "code": 3,
+        "timedOut": false,
+        "response": "connecting to nos.lol... An attempt was made to access a socket in a way forbidden by its access permissions.\nfailed to connect to any of the given relays.",
+        "accepted": false
+      },
+      "query1": {
+        "code": 3,
+        "timedOut": false,
+        "returned": false,
+        "response": "connecting to nos.lol... An attempt was made to access a socket in a way forbidden by its access permissions.\nfailed to connect to any of the given relays."
+      },
+      "publish2": {
+        "code": 3,
+        "timedOut": false,
+        "response": "connecting to nos.lol... An attempt was made to access a socket in a way forbidden by its access permissions.\nfailed to connect to any of the given relays.",
+        "accepted": false
+      },
+      "query2": {
+        "code": 3,
+        "timedOut": false,
+        "returned": false,
+        "response": "connecting to nos.lol... An attempt was made to access a socket in a way forbidden by its access permissions.\nfailed to connect to any of the given relays."
+      },
+      "query1-tras-ban": {
+        "code": 3,
+        "timedOut": false,
+        "returned": false,
+        "response": "connecting to nos.lol... An attempt was made to access a socket in a way forbidden by its access permissions.\nfailed to connect to any of the given relays."
+      }
+    },
+    "damus": {
+      "url": "wss://relay.damus.io",
+      "publish1": {
+        "code": 3,
+        "timedOut": false,
+        "response": "connecting to relay.damus.io... An attempt was made to access a socket in a way forbidden by its access permissions.\nfailed to connect to any of the given relays.",
+        "accepted": false
+      },
+      "query1": {
+        "code": 3,
+        "timedOut": false,
+        "returned": false,
+        "response": "connecting to relay.damus.io... An attempt was made to access a socket in a way forbidden by its access permissions.\nfailed to connect to any of the given relays."
+      },
+      "publish2": {
+        "code": 3,
+        "timedOut": false,
+        "response": "connecting to relay.damus.io... An attempt was made to access a socket in a way forbidden by its access permissions.\nfailed to connect to any of the given relays.",
+        "accepted": false
+      },
+      "query2": {
+        "code": 3,
+        "timedOut": false,
+        "returned": false,
+        "response": "connecting to relay.damus.io... An attempt was made to access a socket in a way forbidden by its access permissions.\nfailed to connect to any of the given relays."
+      },
+      "query1-tras-ban": {
+        "code": 3,
+        "timedOut": false,
+        "returned": false,
+        "response": "connecting to relay.damus.io... An attempt was made to access a socket in a way forbidden by its access permissions.\nfailed to connect to any of the given relays."
+      }
+    },
+    "wine": {
+      "url": "wss://nostr.wine",
+      "publish1": {
+        "code": 3,
+        "timedOut": false,
+        "response": "connecting to nostr.wine... An attempt was made to access a socket in a way forbidden by its access permissions.\nfailed to connect to any of the given relays.",
+        "accepted": false
+      },
+      "query1": {
+        "code": 3,
+        "timedOut": false,
+        "returned": false,
+        "response": "connecting to nostr.wine... An attempt was made to access a socket in a way forbidden by its access permissions.\nfailed to connect to any of the given relays."
+      }
+    }
+  },
+  "pubkey": "06ddb45f538e4e9ae6deae3a87c2394c4df903e90f196d716b3ef7b1521092c8",
+  "npub": "npub1qmwmgh6n3e8f4ek74cag0s3ef3xljqlfpuvk6utt8mmmz5ssjtyqrrgn28",
+  "id1": "7301a0eac00bcfa10a36dcb5ad3457150964b6539dc63ab3bcde297a2e669d3f",
+  "signature": {
+    "original": "valida; exit 0",
+    "altered": "invalid .id, expected id::5ade8ba80ef61354ac082e398ef1b2360f07231b0594402ac2216bc9b8356653, got id::7301a0eac00bcfa10a36dcb5ad3457150964b6539dc63ab3bcde297a2e669d3f",
+    "alteredExit": 123
+  },
+  "ban": {
+    "time": "2026-10-19T21:30:04.032Z",
+    "pubkey": "06ddb45f538e4e9ae6deae3a87c2394c4df903e90f196d716b3ef7b1521092c8",
+    "applied_by": "operador local, por instrucción del usuario; no por el instructor",
+    "message": "blocked: test pubkey banned on local lab relay"
+  },
+  "id2": "5756634e0c6809bf8ce07b81cce56760881497b0d319841b327364f533fa12b8",
+  "local_experiment_complete": true,
+  "ended_at": "2026-10-19T21:30:05.139Z",
+  "secret_persisted": false,
+  "local_relay_stopped": true
+}

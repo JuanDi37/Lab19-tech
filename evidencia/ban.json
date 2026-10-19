@@ -1,0 +1,6 @@
+{
+  "time": "2026-10-19T21:30:04.032Z",
+  "pubkey": "06ddb45f538e4e9ae6deae3a87c2394c4df903e90f196d716b3ef7b1521092c8",
+  "applied_by": "operador local, por instrucción del usuario; no por el instructor",
+  "message": "blocked: test pubkey banned on local lab relay"
+}
