@@ -1,0 +1,403 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Memoria del Laboratorio 19 de Nostr: preparación, procedimiento, fundamentos, comprobaciones y aprendizajes, con el estado real de cada actividad.">
+  <meta name="color-scheme" content="light">
+  <title>Lab 19 · Una firma, varios relays</title>
+  <style>
+    :root{--paper:#f5f3ed;--white:#fffefa;--ink:#182b29;--muted:#546761;--line:#d9ded3;--green:#26634a;--mint:#e4eddf;--amber:#835420;--sand:#f6ead6;--navy:#182b29;--radius:18px}
+    *{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:28px}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.75 system-ui,-apple-system,"Segoe UI",sans-serif}a{color:var(--green);text-underline-offset:4px}a:hover{text-decoration-thickness:2px}button{font:inherit;cursor:pointer}button:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid #ad762e;outline-offset:5px}.skip{position:absolute;top:-90px;left:20px;background:white;padding:10px;z-index:10}.skip:focus{top:10px}
+    .topbar{padding:20px 5vw;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:15px}.brand{font-size:13px;letter-spacing:.15em;font-weight:750;text-transform:uppercase}.topbar span{font-size:13px;color:var(--muted)}.print{border:1px solid var(--line);border-radius:30px;background:var(--white);color:var(--ink);padding:7px 17px}.hero{max-width:1220px;margin:auto;padding:78px 38px 44px}.eyebrow{font-size:12px;letter-spacing:.18em;text-transform:uppercase;font-weight:750;color:var(--green);margin:0 0 16px}h1{font-family:Georgia,"Times New Roman",serif;font-weight:400;font-size:clamp(46px,6.8vw,84px);line-height:1.06;letter-spacing:-.045em;max-width:900px;margin:0 0 25px}h1 em{color:var(--green);font-style:italic}.intro{font-size:19px;max-width:760px;color:var(--muted);line-height:1.7}.hero-meta{display:flex;flex-wrap:wrap;gap:10px;margin:24px 0}.chip{font-size:12px;border:1px solid var(--line);padding:5px 12px;border-radius:25px}.notice{border-left:4px solid #ae7a35;background:var(--sand);padding:18px 23px;border-radius:0 12px 12px 0;margin-top:30px;max-width:990px}.notice p{margin:3px 0}.notice strong{color:#67431c}
+    .layout{max-width:1220px;margin:0 auto;display:grid;grid-template-columns:205px minmax(0,1fr);gap:55px;padding:20px 38px 80px}.sidebar{align-self:start;position:sticky;top:28px;font-size:13px}.sidebar p{font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted)}.sidebar a{display:block;padding:7px 0;text-decoration:none;color:var(--muted)}.sidebar a:hover{color:var(--green)}.sidebar .side-note{margin-top:24px;border-top:1px solid var(--line);padding-top:16px;font-size:12px;letter-spacing:0;text-transform:none}main{min-width:0}section{padding:34px 0 40px;border-bottom:1px solid var(--line)}.section-no{color:var(--green);font-size:12px;letter-spacing:.15em;font-weight:700}h2{font:400 clamp(27px,3vw,37px)/1.2 Georgia,serif;letter-spacing:-.025em;margin:10px 0 22px}h3{font-size:18px;line-height:1.4;margin:26px 0 10px}p{margin:12px 0}ul,ol{padding-left:23px}li{margin:7px 0}.lede{font-size:18px;color:var(--muted)}.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px;margin:26px 0}.card{background:var(--white);border:1px solid var(--line);border-radius:var(--radius);padding:22px}.card .number{font:400 35px/1 Georgia,serif;color:var(--green);display:block;margin-bottom:10px}.card strong{font-size:14px}.card p{font-size:13px;color:var(--muted);margin-bottom:0}.box{background:var(--white);border:1px solid var(--line);padding:22px;border-radius:var(--radius);margin:22px 0}.box.tint{background:var(--mint);border-color:#ceddc7}.small{font-size:13px;color:var(--muted)}.pill{display:inline-block;padding:3px 9px;background:var(--mint);color:var(--green);font-size:11px;font-weight:700;letter-spacing:.02em;border-radius:5px;white-space:nowrap}.pill.pending{background:var(--sand);color:var(--amber)}.pill.neutral{background:#e9ede8;color:#4b5d58}
+    .table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;margin:22px 0;background:var(--white)}table{border-collapse:collapse;width:100%;font-size:13px;text-align:left}th{background:#e9ede5;font-size:11px;text-transform:uppercase;letter-spacing:.045em}td,th{padding:13px 15px;border-bottom:1px solid var(--line);vertical-align:top}tr:last-child td{border-bottom:0}td:first-child{font-weight:650}code{font: .88em/1.6 Consolas,"Cascadia Code",monospace;overflow-wrap:anywhere;background:#e9ede5;padding:2px 5px;border-radius:4px}pre{background:var(--navy);color:#e8efdd;border-radius:12px;padding:20px;overflow:auto;font:12px/1.8 Consolas,monospace;white-space:pre;tab-size:4}pre code{background:transparent;color:inherit;padding:0;overflow-wrap:normal;font:inherit}.path{font-family:Consolas,monospace;font-size:12px}.step{position:relative;padding-left:48px;margin:28px 0}.step-index{position:absolute;left:0;top:0;width:30px;height:30px;background:var(--mint);color:var(--green);display:grid;place-items:center;border-radius:50%;font-size:13px;font-weight:750}.step h3{margin-top:0}.step p{font-size:15px}.flow{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:24px 0}.flow-item{padding:17px 14px;border-top:3px solid var(--green);background:var(--mint);border-radius:0 0 10px 10px;font-size:13px}.flow-item b{display:block;margin-bottom:4px}.flow-item span{font-size:12px;color:var(--muted)}.relay-map{padding:24px;background:var(--navy);color:#eaf0e5;border-radius:var(--radius);margin:24px 0}.relay-map .origin{text-align:center;margin-bottom:23px}.relay-map .origin span{display:block;font-size:12px;color:#b9cdbb}.relay-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}.relay-node{border:1px solid #557061;border-radius:9px;padding:12px 9px;font-size:12px;text-align:center}.relay-node small{display:block;color:#bed0bd;margin-top:5px}.relay-node.restricted{border-style:dashed}.caption{font-size:12px;color:var(--muted);margin-top:10px}
+    details{border:1px solid var(--line);background:var(--white);border-radius:12px;margin:12px 0;padding:0 20px}summary{padding:16px 0;cursor:pointer;font-size:14px;font-weight:650}details[open]{padding-bottom:12px}details pre{margin-top:0}.demo-controls{display:flex;gap:10px;flex-wrap:wrap;margin:20px 0}.demo-controls button{border:1px solid var(--green);background:transparent;color:var(--green);border-radius:25px;padding:7px 14px;font-size:13px}.demo-controls button[aria-pressed="true"]{background:var(--green);color:white}.hash{display:block;word-break:break-all;font:12px/1.8 Consolas,monospace;color:var(--green);padding:10px 0}.demo-state{font-size:14px;border-top:1px solid var(--line);padding-top:12px}.file-links{display:grid;grid-template-columns:1fr 1fr;gap:12px}.file-links a{display:block;background:var(--white);border:1px solid var(--line);padding:17px;border-radius:12px;text-decoration:none}.file-links strong{display:block}.file-links span{font-size:12px;color:var(--muted)}blockquote{border-left:3px solid var(--green);padding:2px 0 2px 20px;margin:24px 0;color:var(--muted);font-size:17px}.footer{max-width:1220px;margin:auto;border-top:1px solid var(--line);padding:24px 38px 40px;font-size:12px;color:var(--muted);display:flex;justify-content:space-between;gap:20px}.sources li{font-size:14px}.appendix-label{color:var(--green);font-size:12px;margin-bottom:7px}.reflection{font-family:Georgia,serif;font-size:18px;line-height:1.8}.reflection p{margin:16px 0}
+    @media(max-width:960px){.layout{grid-template-columns:155px minmax(0,1fr);gap:30px}.cards{grid-template-columns:1fr}.card{padding:18px}.card .number{font-size:27px}.relay-grid{grid-template-columns:1fr 1fr}.flow{grid-template-columns:1fr 1fr}}
+    @media(max-width:650px){.topbar{padding:16px 22px}.topbar span{display:none}.hero{padding:45px 22px 20px}.intro{font-size:17px}.layout{display:block;padding:0 22px 40px}.sidebar{position:static;margin-bottom:20px;border-bottom:1px solid var(--line);padding-bottom:15px}.sidebar a{display:inline-block;margin-right:14px;font-size:12px}.sidebar .side-note{display:none}.file-links{grid-template-columns:1fr}.footer{padding:22px;display:block}section{padding:27px 0}td,th{padding:11px}.step{padding-left:40px}.notice{padding:14px 17px}}
+    @media print{body{background:white;font-size:10pt;color:#111}.topbar,.sidebar,.print,.skip,.demo-controls{display:none}.hero{padding:12px 0}.hero h1{font-size:40pt}.layout{display:block;padding:0}.hero,.layout,.footer{max-width:none}.intro{font-size:12pt}.hero-meta{margin:10px 0}.notice{background:#f5f5f5}.cards{grid-template-columns:repeat(3,1fr)}section{padding:20px 0}h2{font-size:23pt}h2,h3{break-after:avoid}.card,.box,tr,pre,.flow,.relay-map{break-inside:avoid}.table-wrap{overflow:visible}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#f2f4f0;color:#111;font-size:8pt}a{color:inherit}.footer{padding:15px 0}details{border:0;padding:0}summary{padding:12px 0}.hash{font-size:9pt}@page{size:A4;margin:17mm}}
+  </style>
+</head>
+<body>
+  <a class="skip" href="#contenido">Saltar al contenido</a>
+  <header class="topbar">
+    <div class="brand">CS031 <span aria-hidden="true">/</span> Laboratorio 19</div>
+    <span>Sesión 22 · Memoria de trabajo</span>
+    <button class="print" id="print-button" type="button">Imprimir / PDF</button>
+  </header>
+
+  <div class="hero">
+    <p class="eyebrow">Nostr · Identidad, integridad y distribución</p>
+    <h1>Una firma.<br>Varios <em>relays.</em></h1>
+    <p class="intro">Qué preparamos, cómo lo hicimos y para qué sirve: una explicación del Lab 19, desde el cuidado de la llave hasta la diferencia entre firmar, publicar y comprobar que una nota sigue disponible.</p>
+    <div class="hero-meta"><span class="chip">19 de octubre de 2026</span><span class="chip">Windows x64 · PowerShell 5.1</span><span class="chip">Informe local · Sin dependencias externas</span></div>
+    <aside class="notice" aria-label="Estado real del laboratorio">
+      <strong>Estado documentado: preparación completada; ejecución de Nostr pendiente.</strong>
+      <p>Se elaboraron la guía y el carnet, y se comprobaron sintaxis, codificación y estructura JSON. No se logró instalar <code>nak</code> desde esta terminal. No se generaron llaves ni se firmaron o publicaron notas en el trabajo registrado. Tampoco se dispone de la URL del relay de clase.</p>
+    </aside>
+  </div>
+
+  <div class="layout">
+    <nav class="sidebar" aria-label="Índice del informe">
+      <p>En este informe</p>
+      <a href="#proposito">01 · Propósito</a>
+      <a href="#realizado">02 · Lo que hicimos</a>
+      <a href="#fundamentos">03 · Cómo funciona</a>
+      <a href="#procedimiento">04 · Procedimiento preparado</a>
+      <a href="#evidencias">05 · Evidencias y límites</a>
+      <a href="#aprendizajes">06 · Qué aprendimos</a>
+      <a href="#entrega">07 · Entrega y evaluación</a>
+      <a href="#comandos">08 · Comandos completos</a>
+      <a href="#fuentes">09 · Archivos y fuentes</a>
+      <p class="side-note">Una respuesta esperada sirve para orientar el experimento. Solo una respuesta recibida sirve como evidencia del resultado.</p>
+    </nav>
+
+    <main id="contenido">
+      <section id="proposito">
+        <span class="section-no">01 / El propósito</span>
+        <h2>Separar la identidad del lugar de publicación.</h2>
+        <p class="lede">El experimento busca mostrar que un autor puede firmar un evento una sola vez y enviar ese mismo evento a servidores con políticas distintas.</p>
+        <p>En este lab, una nota es un evento de texto firmado. El autor se identifica mediante una llave pública; los relays reciben y distribuyen eventos. La firma permite comprobar que el contenido corresponde a esa llave, mientras cada relay decide si lo admite. Un servidor puede rechazar una publicación sin controlar lo que almacenan otros servidores.</p>
+        <div class="cards">
+          <article class="card"><span class="number">01</span><strong>Autenticidad e integridad</strong><p>Comprobar la nota original y detectar una modificación de una sola letra.</p></article>
+          <article class="card"><span class="number">02</span><strong>Distribución</strong><p>Enviar el mismo JSON a cuatro relays y consultar cada copia por su ID.</p></article>
+          <article class="card"><span class="number">03</span><strong>Moderación local</strong><p>Observar un rechazo por política y un ban aplicado por el instructor en el relay de clase.</p></article>
+        </div>
+        <p>El sentido de conservar el mismo ID es comparar decisiones sobre <em>el mismo objeto</em>. Si se generara una nota nueva en cada publicación, cambiarían sus datos y dejaríamos de comprobar la replicación de un único evento.</p>
+        <div class="box tint"><strong>Qué cuenta como éxito del experimento</strong><p>Una firma original válida, una copia alterada inválida, respuestas reales de los cuatro relays para nota 1, y un rechazo de clase a #2 después del ban junto con #2 recuperada de al menos un relay abierto. Esos resultados todavía deben obtenerse.</p></div>
+      </section>
+
+      <section id="realizado">
+        <span class="section-no">02 / El trabajo realizado</span>
+        <h2>Primero dejamos una preparación verificable.</h2>
+        <p>El punto de partida fue una carpeta de Git prácticamente vacía: solo contenía <code>.gitattributes</code>. Revisamos el entorno, consultamos las fuentes oficiales disponibles y adaptamos el enunciado a PowerShell sin ejecutar los pasos que correspondían al estudiante.</p>
+        <div class="step"><span class="step-index">1</span><h3>Reconocimiento del entorno</h3><p>Revisamos archivos, instrucciones locales, estado de Git y programas disponibles. Identificamos Windows x64 y PowerShell <code>5.1.26100.9711</code>. Ni <code>nak</code> ni Go estaban disponibles en PATH.</p><p><strong>Propósito:</strong> elegir una instalación y comandos compatibles con el equipo, sin asumir que las instrucciones de Bash se pueden pegar directamente en PowerShell.</p></div>
+        <div class="step"><span class="step-index">2</span><h3>Consulta de fuentes oficiales</h3><p>Consultamos el repositorio de <code>fiatjaf/nak</code>, el manejo de la variable <code>NOSTR_SECRET_KEY</code>, la publicación de eventos ya firmados, la verificación y NIP-01. El documento de Google no fue accesible mediante la herramienta; usamos el enunciado que se compartió en el chat.</p><p><strong>Propósito:</strong> comprobar cómo se comporta la herramienta, incluida la ausencia de salida cuando una verificación tiene éxito.</p></div>
+        <div class="step"><span class="step-index">3</span><h3>Intento de instalación</h3><p>Probamos el acceso a GitHub mediante PowerShell y curl. Ambos intentos fallaron al conectar. No se instaló ningún programa. Se dejó como siguiente paso descargar el binario Windows x64 desde Releases oficial y colocarlo en <code>.tools/nak.exe</code>.</p><pre><code>PowerShell: Unable to connect to the remote server
+curl: (7) Failed to connect to github.com:443</code></pre><p><strong>Propósito:</strong> usar la distribución oficial. El error observado demuestra una limitación de conexión de esta terminal; no permite concluir que el proyecto o los relays estén caídos.</p></div>
+        <div class="step"><span class="step-index">4</span><h3>Respeto de la generación de la llave por el estudiante</h3><p>Se confirmó que el estudiante estaba en clase y debía generar su propia llave. Por ello, preparamos el comando que captura la salida en una variable de proceso, sin imprimir el secreto ni guardarlo en un archivo. La generación no se ejecutó.</p><p><strong>Propósito:</strong> mantener la custodia de la llave en la terminal del estudiante y respetar el requisito de usar únicamente llaves de test creadas en clase.</p></div>
+        <div class="step"><span class="step-index">5</span><h3>Documentación y protección del repositorio</h3><p>Creamos <code>README.md</code> con la secuencia de trabajo; <code>CARNET.md</code> con la tabla y reflexión pendientes; <code>ESTADO.md</code> con lo observado; y <code>.gitignore</code> para excluir herramientas locales y nombres habituales de archivos sensibles. Se preparó la carpeta <code>.tools</code>.</p><p><strong>Propósito:</strong> poder continuar el lab sin confundir instrucciones, resultados y entregable. No se hizo commit ni se publicó el repositorio.</p></div>
+        <div class="step"><span class="step-index">6</span><h3>Comprobaciones locales de la guía</h3><p>Analizamos los 11 bloques PowerShell con el parser del sistema: no hubo errores de sintaxis. Usamos Node, ya instalado, para comprobar la ida y vuelta del texto fijo a través de un pipeline nativo en UTF-8. También comprobamos que PowerShell interpreta la etiqueta como un arreglo que contiene un tag de dos elementos.</p><p><strong>Propósito:</strong> reducir fallos de sintaxis y codificación antes de firmar. Estas comprobaciones no prueban todavía que <code>nak</code> firme, publique o consulte correctamente en este equipo.</p></div>
+        <div class="box"><strong>Este HTML</strong><p>Reúne el registro de preparación, el fundamento del ejercicio, las instrucciones completas y los aprendizajes. Es un documento local para leer o imprimir. No se conecta a relays, no genera llaves y no publica eventos.</p></div>
+        <h3>Cómo comprobamos este informe</h3>
+        <p>Verificamos el cierre de etiquetas, los identificadores, los enlaces, la ausencia de recursos externos y la coincidencia exacta de los 11 bloques con README. Mediante Node y un DOM simulado comprobamos los botones de la demostración, sus hashes, la alternativa sin Web Crypto y la apertura y restauración de los bloques para imprimir.</p>
+        <p class="small">Límite de validación: intentamos obtener una captura con Chrome y Edge en modo headless; ambos finalizaron con código <code>-2147483645</code> y no produjeron la imagen. No se pudo revisar visualmente el renderizado ni el PDF. Las comprobaciones de lógica no sustituyen esa revisión.</p>
+      </section>
+
+      <section id="fundamentos">
+        <span class="section-no">03 / El fundamento técnico</span>
+        <h2>Qué significan la llave, el hash y la firma.</h2>
+        <h3>Una llave privada autoriza; una pública permite comprobar</h3>
+        <p>La llave privada permite firmar. La llave pública se deriva de ella y se puede compartir. <code>npub</code> es una codificación de la llave pública; <code>nsec</code> representa una llave privada. El secreto sigue siendo secreto si se muestra en hexadecimal: cambiar su representación no cambia su poder para firmar.</p>
+        <p>Una firma válida acredita el control de la llave utilizada para ese evento. Por sí sola no demuestra el nombre real de la persona ni que el contenido sea verdadero. La nota firmada tampoco está cifrada: el contenido del lab se publica como texto legible.</p>
+        <div class="table-wrap"><table><caption class="small">Los siete campos de un evento firmado de este lab</caption><thead><tr><th>Campo</th><th>Función</th><th>En el ejercicio</th></tr></thead><tbody>
+          <tr><td><code>id</code></td><td>Hash SHA-256 de los datos serializados de forma canónica.</td><td>Identifica la nota y permite pedir exactamente ese evento.</td></tr>
+          <tr><td><code>pubkey</code></td><td>Llave pública hexadecimal del autor.</td><td>Debe ser la misma en ambas notas.</td></tr>
+          <tr><td><code>created_at</code></td><td>Fecha Unix, en segundos.</td><td>Se fija al crear la nota.</td></tr>
+          <tr><td><code>kind</code></td><td>Tipo de evento.</td><td><code>1</code>, nota de texto.</td></tr>
+          <tr><td><code>tags</code></td><td>Etiquetas estructuradas.</td><td><code>[["t","cs031lab19"]]</code>.</td></tr>
+          <tr><td><code>content</code></td><td>Contenido de la nota.</td><td>Texto fijo y su variante con <code>#2</code>.</td></tr>
+          <tr><td><code>sig</code></td><td>Firma Schnorr del hash del evento.</td><td>Permite verificar autenticidad e integridad.</td></tr>
+        </tbody></table></div>
+        <h3>El ID es una huella del contenido y sus datos</h3>
+        <p>NIP-01 define el cálculo sobre esta estructura, serializada como JSON compacto en UTF-8:</p>
+        <pre><code>[0, pubkey, created_at, kind, tags, content]
+                   ↓ SHA-256
+                      id
+                   ↓ firma con la llave privada
+                      sig</code></pre>
+        <p>Ni <code>id</code> ni <code>sig</code> se incluyen dentro de esa estructura de entrada. Así se evita una definición circular. La codificación importa: si un carácter se transforma al pasar por la terminal, los bytes y el hash pueden cambiar.</p>
+        <div class="flow" aria-label="Secuencia conceptual de validación"><div class="flow-item"><b>1. Leer</b><span>Interpretar los campos del JSON.</span></div><div class="flow-item"><b>2. Recalcular</b><span>Obtener el hash de los datos.</span></div><div class="flow-item"><b>3. Comparar</b><span>Comprobar que coincide con el ID.</span></div><div class="flow-item"><b>4. Verificar</b><span>Comprobar la firma con la llave pública.</span></div></div>
+        <h3>Por qué una sola letra rompe la comprobación</h3>
+        <p>La copia local cambia <code>prueba</code> por <code>pruebb</code> y conserva el ID y la firma originales. Al recalcular el hash aparece una discrepancia. <code>nak verify</code> debe informar <code>invalid .id</code> y detenerse antes de comprobar la firma. La firma original no autentica el contenido modificado; el experimento observa primero la discrepancia del ID.</p>
+        <div class="box" id="hash-demo">
+          <strong>Exploración local: cambia una letra y observa la huella</strong>
+          <p class="small">Demostración didáctica del SHA-256 del texto únicamente. No calcula un ID Nostr, no firma, no usa una llave y no produce evidencia del lab.</p>
+          <div class="demo-controls"><button type="button" id="original-button" aria-pressed="true">Texto original</button><button type="button" id="altered-button" aria-pressed="false">Cambiar una letra</button></div>
+          <p><code id="demo-text">CS031 Lab 19 · nota de prueba</code></p>
+          <span class="small">SHA-256 del texto en UTF-8</span>
+          <output id="demo-hash" class="hash" aria-live="polite">La demostración requiere JavaScript y Web Crypto disponibles en el navegador.</output>
+          <p id="demo-state" class="demo-state">Selecciona uno de los dos textos para comparar sus huellas.</p>
+          <noscript><p>JavaScript está desactivado. La explicación y todos los comandos del informe siguen disponibles.</p></noscript>
+        </div>
+        <h3>Una firma puede viajar entre servidores</h3>
+        <p>El JSON completo se publica sin volver a firmarlo. Los cuatro relays pueden tomar decisiones diferentes sobre esa misma nota:</p>
+        <div class="relay-map" aria-label="Esquema conceptual, no resultados observados"><div class="origin"><strong>Un único evento firmado</strong><span>Mismo ID · mismo contenido · misma firma</span></div><div class="relay-grid"><div class="relay-node">relay.damus.io<small>Consultar respuesta real</small></div><div class="relay-node">nos.lol<small>Consultar respuesta real</small></div><div class="relay-node restricted">nostr.wine<small>Rechazo por pago esperado</small></div><div class="relay-node restricted">Relay de clase<small>URL pendiente</small></div></div></div>
+        <p class="caption">Diagrama del experimento previsto. No representa publicaciones realizadas.</p>
+        <p>Un mensaje de aceptación indica la decisión del relay al publicar. Recuperar la nota es otra observación: se necesita una consulta por ID. Incluso después de recuperarla, no se demuestra que el servidor la conservará para siempre.</p>
+        <p>El ban de clase busca mostrar el alcance local de una política: rechazar nuevas notas de una llave en ese servidor no equivale a eliminar sus eventos en todos los demás. La permanencia concreta se comprueba consultando los relays abiertos después del ban.</p>
+      </section>
+
+      <section id="procedimiento">
+        <span class="section-no">04 / El procedimiento preparado</span>
+        <h2>De la instalación a la entrega.</h2>
+        <p>Esta es la secuencia que dejamos documentada para ejecutar en clase. <strong>Las acciones de Nostr que siguen son instrucciones pendientes, no resultados obtenidos.</strong> El apéndice incluye los 11 bloques completos de PowerShell.</p>
+        <div class="table-wrap"><table><thead><tr><th>Fase</th><th>Cómo se hace</th><th>Para qué / evidencia</th></tr></thead><tbody>
+          <tr><td>0 · Instalación<br><span class="pill pending">Pendiente</span></td><td>Descargar el binario oficial Windows x64, colocarlo en <code>.tools</code>, crear alias y ejecutar <code>nak --version</code>.</td><td>Confirmar que la herramienta funciona y registrar su versión.</td></tr>
+          <tr><td>1 · Llave<br>3 minutos</td><td>El estudiante genera la llave en clase. La captura en <code>$env:NOSTR_SECRET_KEY</code>, deriva la pública y codifica el <code>npub</code>.</td><td>Usar una identidad descartable. Guardar únicamente la identidad pública.</td></tr>
+          <tr><td>2 · Firma local<br>7 minutos</td><td>Crear nota 1 con texto y etiqueta exactos; comprobar los siete campos; verificar original y copia alterada.</td><td>Guardar el evento, su ID, códigos de salida y mensaje de error de la copia.</td></tr>
+          <tr><td>3 · Cuatro relays<br>8 minutos</td><td>Enviar el mismo JSON a tres públicos y al relay de clase cuando se conozca. Consultar uno por uno con <code>nak req -i</code>.</td><td>Distinguir aceptación y recuperación, y capturar el rechazo explícito de nostr.wine.</td></tr>
+          <tr><td>4 · Ban y #2<br>7 minutos</td><td>Esperar el ban del instructor. Firmar #2 con la misma llave y enviarla a Damus, nos.lol y clase.</td><td>Registrar el rechazo de clase y recuperar #2 de un abierto. Volver a consultar nota 1 después del ban.</td></tr>
+          <tr><td>5 · Entrega<br>5 minutos</td><td>Completar el carnet, eliminar la variable privada y cerrar la terminal que la generó.</td><td>Entregar un único bloque con npub, ID, tabla, comprobación y tres líneas de reflexión.</td></tr>
+        </tbody></table></div>
+        <h3>Las decisiones de adaptación a PowerShell</h3>
+        <ul>
+          <li><strong>Variable de proceso:</strong> se usa <code>$env:NOSTR_SECRET_KEY</code> en lugar de <code>export</code>. No se usa <code>setx</code>, que persistiría la variable.</li>
+          <li><strong>Captura sin impresión:</strong> la salida de <code>nak key generate</code> se asigna directamente. La llave no se escribe como literal en el comando.</li>
+          <li><strong>UTF-8 explícito:</strong> se configuran consola y pipeline, y los JSON firmados se escriben en UTF-8 sin BOM con <code>WriteAllText</code>.</li>
+          <li><strong>Lectura del JSON completo:</strong> <code>Get-Content -Raw -Encoding UTF8</code> entrega el evento como una unidad.</li>
+          <li><strong>Evidencia separada:</strong> stdout conserva eventos y stderr conserva diagnósticos. El mensaje de cada relay debe revisarse por separado del código global.</li>
+          <li><strong>Protección contra regeneración accidental:</strong> antes de crear una nota se comprueba si su archivo ya existe. Se reutiliza el evento firmado.</li>
+          <li><strong>Validación previa a publicar:</strong> se comprueban autor, tipo, texto y etiqueta para evitar contenido no permitido.</li>
+        </ul>
+        <div class="box"><strong>Contenido exacto autorizado</strong><p><code>CS031 Lab 19 · nota de prueba</code></p><p><code>CS031 Lab 19 · nota de prueba #2</code></p><p>Ambas con <code>t=cs031lab19</code>. La copia <code>pruebb</code> es únicamente local. Como máximo se publican dos notas distintas por persona, sin loops.</p></div>
+      </section>
+
+      <section id="evidencias">
+        <span class="section-no">05 / Evidencias y límites</span>
+        <h2>Lo comprobado tiene un alcance concreto.</h2>
+        <div class="table-wrap"><table><thead><tr><th>Comprobación</th><th>Resultado registrado</th><th>Qué permite afirmar</th></tr></thead><tbody>
+          <tr><td>Entorno</td><td><span class="pill">Comprobado</span><br>Windows x64 y PowerShell 5.1.</td><td>La guía se adaptó al entorno identificado.</td></tr>
+          <tr><td>Herramientas</td><td><span class="pill pending">Falta nak</span><br>nak y Go no disponibles en PATH.</td><td>Aún se debe instalar nak y comprobar su versión.</td></tr>
+          <tr><td>Conexión de descarga</td><td><span class="pill pending">Falló</span><br>PowerShell y curl no conectaron a GitHub.</td><td>No se pudo instalar desde esta terminal.</td></tr>
+          <tr><td>Sintaxis PowerShell</td><td><span class="pill">Comprobado</span><br>11 bloques; 0 errores del parser.</td><td>Los bloques se pueden analizar sintácticamente. No demuestra su ejecución con nak.</td></tr>
+          <tr><td>Codificación</td><td><span class="pill">Comprobado</span><br>Ida y vuelta UTF-8 del texto fijo mediante Node.</td><td>La configuración probada conserva esos caracteres en el pipeline.</td></tr>
+          <tr><td>Etiqueta JSON</td><td><span class="pill">Comprobado</span><br>Un tag con dos elementos.</td><td>La validación prevista coincide con la estructura leída por PowerShell.</td></tr>
+          <tr><td>Firma y alteración</td><td><span class="pill pending">Sin ejecutar</span></td><td>No hay aún una verificación criptográfica real del estudiante.</td></tr>
+          <tr><td>Publicación y consulta</td><td><span class="pill pending">Sin ejecutar</span></td><td>No hay aceptaciones, rechazos ni recuperaciones observadas.</td></tr>
+          <tr><td>Ban de clase</td><td><span class="pill pending">Bloqueado por dependencia</span><br>No se proporcionó el endpoint.</td><td>Se necesita URL y aplicación del ban por el instructor.</td></tr>
+        </tbody></table></div>
+        <h3>La tabla de relays permanece abierta</h3>
+        <div class="table-wrap"><table><thead><tr><th>Relay</th><th>Nota 1: aceptación / respuesta</th><th>Nota 1 recuperada</th><th>#2 tras ban</th></tr></thead><tbody>
+          <tr><td>relay.damus.io</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td></tr>
+          <tr><td>nos.lol</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td></tr>
+          <tr><td>nostr.wine</td><td>Pendiente; rechazo por pago esperado</td><td>Pendiente</td><td>No aplica: no se envía #2</td></tr>
+          <tr><td>Clase</td><td>Sin ejecutar: falta URL</td><td>Sin ejecutar</td><td>Sin ejecutar: falta URL y ban real</td></tr>
+        </tbody></table></div>
+        <p>No es correcto escribir «mi nota quedó en 3 de 4 relays» sin haber recuperado el evento. Tampoco se puede presentar el mensaje de rechazo de un ejemplo del repositorio como si lo hubiera devuelto un relay durante esta sesión.</p>
+        <h3>Cómo interpretar los resultados cuando se ejecuten</h3>
+        <ul>
+          <li><code>nak verify</code> silencioso con código <code>0</code>: verificación exitosa de la entrada procesada; se debe comprobar que se proporcionó el evento correcto.</li>
+          <li><code>invalid .id</code>: el hash calculado no coincide con el ID declarado.</li>
+          <li><code>success.</code> al publicar: salida de aceptación de nak; se debe consultar después el evento por su ID.</li>
+          <li>Mensaje explícito de bloqueo o pago: respuesta de política a documentar literalmente.</li>
+          <li>Timeout, DNS o fallo de conexión: no acreditan un ban ni un rechazo por política.</li>
+          <li>Archivo de consulta vacío: revisar si hubo error o si terminó una consulta sin resultados. No equivale por sí solo a inexistencia permanente.</li>
+        </ul>
+      </section>
+
+      <section id="aprendizajes">
+        <span class="section-no">06 / Qué aprendimos</span>
+        <h2>Aprendizajes de la preparación y del diseño del experimento.</h2>
+        <p class="lede">Comprendimos el mecanismo y dejamos preparado cómo demostrarlo. La demostración con una llave real de test sigue pendiente.</p>
+        <h3>1. Firmar, publicar y recuperar son acciones diferentes</h3><p>La firma se calcula localmente. Publicar requiere que un relay acepte el evento. Recuperarlo exige una consulta posterior. Una de estas acciones no reemplaza la evidencia de las otras.</p>
+        <h3>2. La integridad depende de los datos exactos</h3><p>Una letra, la etiqueta, la fecha o una codificación incorrecta pueden modificar el hash. Por eso fijamos el texto y configuramos UTF-8 antes de crear el evento, en lugar de intentar corregirlo después de firmar.</p>
+        <h3>3. Distribución no significa aceptación universal</h3><p>Los relays pueden tener políticas de acceso distintas. La descentralización permite enviar un evento a varios servidores; no obliga a todos a guardarlo ni garantiza disponibilidad permanente.</p>
+        <h3>4. Un ban tiene el alcance del servidor que lo aplica</h3><p>La hipótesis del lab es que el bloqueo de escritura en clase no elimina las copias de otros relays. Hace falta observar la respuesta de clase y consultar los abiertos para convertir esa explicación en evidencia de esta sesión.</p>
+        <h3>5. Cuidar la identidad empieza antes de publicar</h3><p>La llave privada no debe aparecer en la documentación. Capturarla sin imprimirla reduce exposiciones; <code>.gitignore</code> solo excluye patrones de nombres y no detecta secretos pegados dentro de otros archivos. No se deben abrir procesos secundarios que hereden esa variable.</p>
+        <h3>6. Un registro honesto distingue fallos y resultados</h3><p>Una guía con sintaxis válida es útil, pero no demuestra una firma. Un error de red es información sobre la conectividad, pero no una decisión de moderación. Registrar lo pendiente evita conclusiones que el experimento aún no sostiene.</p>
+        <h3>7. La seguridad también incluye moderación y límites</h3><p>Usar el texto fijo, publicar como máximo dos notas, consultar únicamente IDs propios, no pagar y no evadir bans mantiene el ejercicio dentro de sus reglas. El lab no requiere scraping, otro relay propio, borrados, zaps ni mensajes directos.</p>
+        <blockquote>El aprendizaje central es poder explicar qué garantiza cada pieza: la llave autoriza, el hash identifica los datos, la firma permite verificarlos y cada relay decide qué admite.</blockquote>
+        <div class="box tint"><strong>Aplicación a un venture</strong><p>Una cuenta de proyecto necesitaría una política real de custodia: quién puede firmar, con qué dispositivo o firmador y cómo se protege una copia cifrada. Usar varios relays puede ampliar la distribución, pero requiere comprobar presencia y políticas. Esta es una reflexión de diseño; no se configuró una cuenta de producción.</p></div>
+      </section>
+
+      <section id="entrega">
+        <span class="section-no">07 / El entregable</span>
+        <h2>La evidencia pesa más que el diseño del carnet.</h2>
+        <p>El entregable evaluado sigue siendo un único bloque <code>## LAB # 19</code> en el link de carnet, antes de salir de clase. Este informe HTML explica el trabajo; no sustituye las respuestas reales que exige el lab.</p>
+        <div class="table-wrap"><table><thead><tr><th>Criterio del enunciado</th><th>Peso</th><th>Evidencia requerida</th></tr></thead><tbody>
+          <tr><td>Tabla completa</td><td>35%</td><td>Cuatro filas de nota 1 con mensajes reales y recuperación por ID.</td></tr>
+          <tr><td>Evidencia del ban</td><td>20%</td><td>Respuesta de clase a #2 y #2 presente en al menos un abierto.</td></tr>
+          <tr><td>Firma</td><td>20%</td><td>Original válida, copia inválida y explicación del cambio de hash.</td></tr>
+          <tr><td>Reflexión</td><td>15%</td><td>Tres líneas concretas basadas en la tabla y un lugar real para custodiar una llave de proyecto.</td></tr>
+          <tr><td>Higiene y límites</td><td>10%</td><td>Llave privada nunca compartida; contenido fijo; máximo dos notas públicas.</td></tr>
+        </tbody></table></div>
+        <p>El enunciado indica que exponer una nsec, incluso de test, deja higiene en cero y requiere avisar al instructor para descartar esa llave. También penaliza acoso, spam o contenido distinto al autorizado. No se generó ni se expuso una llave privada en el trabajo registrado.</p>
+        <h3>Qué falta para cerrar el ejercicio</h3>
+        <ol>
+          <li>Instalar el binario oficial y comprobar <code>nak --version</code>.</li>
+          <li>Generar la llave en la terminal del estudiante y completar firma y alteración local.</li>
+          <li>Publicar y recuperar nota 1 en los tres relays públicos.</li>
+          <li>Obtener el endpoint del instructor y completar nota 1 en clase.</li>
+          <li>Esperar el ban real, publicar #2 con la misma llave y registrar las consultas.</li>
+          <li>Completar la tabla, cerrar la terminal que contiene la llave y entregar el carnet.</li>
+        </ol>
+        <p>Si el endpoint no se proporciona, corresponde comunicar la dependencia al instructor y dejar esas celdas como no ejecutadas, o seguir una adaptación explícita que él indique.</p>
+        <h3>Reflexión de tres líneas: estructura preparada</h3>
+        <div class="box reflection"><p>Mi nota quedó en ___ de 4 relays; ___ la rechazó con «___».</p><p>El ban me quitó ___ pero no ___; lo comprobé recuperando ___ desde ___.</p><p>Si mi venture tuviera una cuenta Nostr, la nsec la guardaría ___ porque ___.</p></div>
+        <p class="small">Los espacios permanecen vacíos porque faltan resultados reales. No son una reflexión terminada ni una afirmación de éxito.</p>
+      </section>
+
+      <section id="comandos">
+        <span class="section-no">08 / Apéndice reproducible</span>
+        <h2>Los comandos que dejamos preparados.</h2>
+        <p>Transcripción de los 11 bloques de <a href="README.md">README.md</a>, en el mismo orden. El README contiene las condiciones y explicaciones entre bloques; léelas antes de ejecutar. Usa la misma ventana PowerShell y conserva los eventos ya creados. Ningún comando se ejecuta por abrir este HTML.</p>
+        <p class="small">El bloque 9 requiere que el instructor haya confirmado el ban. No se debe ejecutar la publicación de #2 antes de ese momento. Los bloques son instrucciones; no contienen valores de llaves privadas.</p>
+        <details><summary>Bloque 1 · Instalacion oficial y version</summary><pre><code>Set-Location -LiteralPath &#39;C:\Users\juanl\Documents\GitHub\Laboratorio 19&#39;
+if (-not (Test-Path -LiteralPath &#39;.\.tools\nak.exe&#39;)) { throw &#39;Falta .tools/nak.exe: descarga el binario oficial de Windows.&#39; }
+Set-Alias -Name nak -Value (Resolve-Path -LiteralPath &#39;.\.tools\nak.exe&#39;).Path
+nak --version
+if ($LASTEXITCODE -ne 0) { throw &#39;nak no funciona. Detente antes de generar la llave.&#39; }
+New-Item -ItemType Directory -Path &#39;.\evidencia&#39; -Force | Out-Null
+nak --version | Set-Content -LiteralPath &#39;.\evidencia\version.txt&#39; -Encoding UTF8</code></pre></details>
+<details><summary>Bloque 2 · UTF-8 y generacion de la llave por el estudiante</summary><pre><code>$utf8 = New-Object System.Text.UTF8Encoding($false)
+$OutputEncoding = $utf8
+[Console]::InputEncoding = $utf8
+[Console]::OutputEncoding = $utf8
+$ErrorActionPreference = &#39;Continue&#39;
+
+if ($env:NOSTR_SECRET_KEY) { throw &#39;Ya hay una llave en esta terminal. Abre una terminal nueva para el lab; no la muestres.&#39; }
+$env:NOSTR_SECRET_KEY = (nak key generate | Out-String).Trim()
+if ($LASTEXITCODE -ne 0 -or $env:NOSTR_SECRET_KEY -notmatch &#39;^[0-9a-fA-F]{64}$&#39;) {
+    Remove-Item Env:NOSTR_SECRET_KEY -ErrorAction SilentlyContinue
+    throw &#39;No se genero una llave de test valida.&#39;
+}
+$pubkey = ($env:NOSTR_SECRET_KEY | nak key public | Out-String).Trim()
+if ($LASTEXITCODE -ne 0 -or $pubkey -notmatch &#39;^[0-9a-f]{64}$&#39;) { throw &#39;Fallo al obtener la llave publica.&#39; }
+$npub = (nak encode npub $pubkey | Out-String).Trim()
+if ($LASTEXITCODE -ne 0 -or $npub -notmatch &#39;^npub1&#39;) { throw &#39;Fallo al obtener npub.&#39; }
+$npub
+$npub | Set-Content -LiteralPath &#39;.\evidencia\npub.txt&#39; -Encoding UTF8</code></pre></details>
+<details><summary>Bloque 3 · Crear y revisar nota 1</summary><pre><code>if (Test-Path -LiteralPath &#39;.\nota1.json&#39;) { throw &#39;nota1.json ya existe: reutilizala, no generes otra nota.&#39; }
+if (-not $env:NOSTR_SECRET_KEY) { throw &#39;Falta la llave de esta sesion.&#39; }
+$notaJson = (nak event -k 1 -c &#39;CS031 Lab 19 &#183; nota de prueba&#39; -t t=cs031lab19 | Out-String).Trim()
+if ($LASTEXITCODE -ne 0 -or -not $notaJson) { throw &#39;Fallo al crear la nota.&#39; }
+$nota = $notaJson | ConvertFrom-Json
+if ($nota.pubkey -ne $pubkey -or $nota.content -cne &#39;CS031 Lab 19 &#183; nota de prueba&#39; -or $nota.kind -ne 1) {
+    throw &#39;Autor o contenido inesperado: no publiques.&#39;
+}
+if ($nota.tags.Count -ne 1 -or $nota.tags[0].Count -ne 2 -or $nota.tags[0][0] -cne &#39;t&#39; -or $nota.tags[0][1] -cne &#39;cs031lab19&#39;) {
+    throw &#39;La etiqueta no coincide con el lab: no publiques.&#39;
+}
+[System.IO.File]::WriteAllText((Join-Path $PWD.Path &#39;nota1.json&#39;), $notaJson, $utf8)
+$id1 = $nota.id
+$id1 | Set-Content -LiteralPath &#39;.\evidencia\id1.txt&#39; -Encoding UTF8
+$nota | Format-List id,pubkey,created_at,kind,tags,content,sig</code></pre></details>
+<details><summary>Bloque 4 · Verificar la nota original</summary><pre><code>Get-Content -LiteralPath &#39;.\nota1.json&#39; -Raw -Encoding UTF8 | nak verify 2&gt;&amp;1 | Tee-Object -FilePath &#39;.\evidencia\firma-original.txt&#39;
+$codigoOriginal = $LASTEXITCODE
+&quot;exit_code=$codigoOriginal&quot; | Add-Content -LiteralPath &#39;.\evidencia\firma-original.txt&#39;
+if ($codigoOriginal -ne 0) { throw &#39;La original no paso la verificacion. No publiques.&#39; }
+&#39;Original valida (exit_code=0)&#39;</code></pre></details>
+<details><summary>Bloque 5 · Alterar una letra y verificar el fallo</summary><pre><code>$alteradaJson = (Get-Content -LiteralPath &#39;.\nota1.json&#39; -Raw -Encoding UTF8).Replace(&#39;nota de prueba&#39;, &#39;nota de pruebb&#39;)
+$alterada = $alteradaJson | ConvertFrom-Json
+if ($alterada.content -ceq $nota.content -or $alterada.id -ne $nota.id -or $alterada.sig -ne $nota.sig) { throw &#39;La alteracion no es la esperada.&#39; }
+[System.IO.File]::WriteAllText((Join-Path $PWD.Path &#39;nota1-alterada.json&#39;), $alteradaJson, $utf8)
+Get-Content -LiteralPath &#39;.\nota1-alterada.json&#39; -Raw -Encoding UTF8 | nak verify 2&gt;&amp;1 | Tee-Object -FilePath &#39;.\evidencia\firma-alterada.txt&#39;
+$codigoAlterada = $LASTEXITCODE
+&quot;exit_code=$codigoAlterada&quot; | Add-Content -LiteralPath &#39;.\evidencia\firma-alterada.txt&#39;
+if ($codigoAlterada -eq 0) { throw &#39;La copia alterada no deberia ser valida.&#39; }
+if (-not (Select-String -LiteralPath &#39;.\evidencia\firma-alterada.txt&#39; -Pattern &#39;invalid \.id&#39; -Quiet)) {
+    throw &#39;Fallo por otra causa; revisa el mensaje antes de registrar el resultado.&#39;
+}</code></pre></details>
+<details><summary>Bloque 6 · Publicar nota 1 en los tres relays publicos</summary><pre><code>Get-Content -LiteralPath &#39;.\nota1.json&#39; -Raw -Encoding UTF8 | nak event wss://relay.damus.io wss://nos.lol wss://nostr.wine 1&gt; &#39;.\evidencia\publicacion-1-evento.txt&#39; 2&gt; &#39;.\evidencia\publicacion-1-respuestas.txt&#39;
+$LASTEXITCODE | Set-Content -LiteralPath &#39;.\evidencia\publicacion-1-exit.txt&#39;
+Get-Content -LiteralPath &#39;.\evidencia\publicacion-1-respuestas.txt&#39;</code></pre></details>
+<details><summary>Bloque 7 · Consultar nota 1 por ID en cada relay publico</summary><pre><code>nak req -i $id1 wss://relay.damus.io 1&gt; &#39;.\evidencia\nota1-damus.jsonl&#39; 2&gt; &#39;.\evidencia\req1-damus.txt&#39;
+nak req -i $id1 wss://nos.lol 1&gt; &#39;.\evidencia\nota1-noslol.jsonl&#39; 2&gt; &#39;.\evidencia\req1-noslol.txt&#39;
+nak req -i $id1 wss://nostr.wine 1&gt; &#39;.\evidencia\nota1-wine.jsonl&#39; 2&gt; &#39;.\evidencia\req1-wine.txt&#39;
+Get-Content -LiteralPath &#39;.\evidencia\nota1-damus.jsonl&#39;
+Get-Content -LiteralPath &#39;.\evidencia\nota1-noslol.jsonl&#39;
+Get-Content -LiteralPath &#39;.\evidencia\nota1-wine.jsonl&#39;
+Get-Content -LiteralPath &#39;.\evidencia\req1-damus.txt&#39;,&#39;.\evidencia\req1-noslol.txt&#39;,&#39;.\evidencia\req1-wine.txt&#39;</code></pre></details>
+<details><summary>Bloque 8 · Publicar y consultar nota 1 en clase cuando exista endpoint</summary><pre><code>$relayClase = Read-Host &#39;URL exacta del relay de clase dada por el instructor&#39;
+if ($relayClase -notmatch &#39;^wss?://\S+$&#39;) { throw &#39;Falta una URL ws:// o wss:// valida del instructor.&#39; }
+Get-Content -LiteralPath &#39;.\nota1.json&#39; -Raw -Encoding UTF8 | nak event $relayClase 1&gt; &#39;.\evidencia\publicacion-1-clase-evento.txt&#39; 2&gt; &#39;.\evidencia\publicacion-1-clase-respuestas.txt&#39;
+Get-Content -LiteralPath &#39;.\evidencia\publicacion-1-clase-respuestas.txt&#39;
+nak req -i $id1 $relayClase 1&gt; &#39;.\evidencia\nota1-clase.jsonl&#39; 2&gt; &#39;.\evidencia\req1-clase.txt&#39;
+Get-Content -LiteralPath &#39;.\evidencia\nota1-clase.jsonl&#39;,&#39;.\evidencia\req1-clase.txt&#39;</code></pre></details>
+<details><summary>Bloque 9 · Crear y publicar #2 SOLO despues del ban confirmado</summary><pre><code>if (-not $relayClase) { throw &#39;Falta el relay de clase. No ejecutes la fase del ban.&#39; }
+if (Test-Path -LiteralPath &#39;.\nota2.json&#39;) { throw &#39;nota2.json ya existe: reutilizala, no generes otra.&#39; }
+if (-not $env:NOSTR_SECRET_KEY) { throw &#39;Falta la llave original: no generes otra para evadir el ban.&#39; }
+$nota2Json = (nak event -k 1 -c &#39;CS031 Lab 19 &#183; nota de prueba #2&#39; -t t=cs031lab19 | Out-String).Trim()
+if ($LASTEXITCODE -ne 0 -or -not $nota2Json) { throw &#39;Fallo al crear nota #2.&#39; }
+$nota2 = $nota2Json | ConvertFrom-Json
+if ($nota2.pubkey -ne $pubkey -or $nota2.content -cne &#39;CS031 Lab 19 &#183; nota de prueba #2&#39; -or $nota2.kind -ne 1) { throw &#39;Autor o contenido inesperado: no publiques.&#39; }
+if ($nota2.tags.Count -ne 1 -or $nota2.tags[0].Count -ne 2 -or $nota2.tags[0][0] -cne &#39;t&#39; -or $nota2.tags[0][1] -cne &#39;cs031lab19&#39;) { throw &#39;Etiqueta inesperada: no publiques.&#39; }
+[System.IO.File]::WriteAllText((Join-Path $PWD.Path &#39;nota2.json&#39;), $nota2Json, $utf8)
+$id2 = $nota2.id
+$id2 | Set-Content -LiteralPath &#39;.\evidencia\id2.txt&#39; -Encoding UTF8
+Get-Content -LiteralPath &#39;.\nota2.json&#39; -Raw -Encoding UTF8 | nak verify
+if ($LASTEXITCODE -ne 0) { throw &#39;La nota #2 no paso la verificacion.&#39; }
+Get-Content -LiteralPath &#39;.\nota2.json&#39; -Raw -Encoding UTF8 | nak event wss://relay.damus.io wss://nos.lol $relayClase 1&gt; &#39;.\evidencia\publicacion-2-evento.txt&#39; 2&gt; &#39;.\evidencia\publicacion-2-respuestas.txt&#39;
+$LASTEXITCODE | Set-Content -LiteralPath &#39;.\evidencia\publicacion-2-exit.txt&#39;
+Get-Content -LiteralPath &#39;.\evidencia\publicacion-2-respuestas.txt&#39;</code></pre></details>
+<details><summary>Bloque 10 · Consultar #2 y supervivencia de nota 1 despues del ban</summary><pre><code>nak req -i $id2 wss://relay.damus.io 1&gt; &#39;.\evidencia\nota2-damus.jsonl&#39; 2&gt; &#39;.\evidencia\req2-damus.txt&#39;
+nak req -i $id2 wss://nos.lol 1&gt; &#39;.\evidencia\nota2-noslol.jsonl&#39; 2&gt; &#39;.\evidencia\req2-noslol.txt&#39;
+nak req -i $id2 $relayClase 1&gt; &#39;.\evidencia\nota2-clase.jsonl&#39; 2&gt; &#39;.\evidencia\req2-clase.txt&#39;
+nak req -i $id1 wss://relay.damus.io 1&gt; &#39;.\evidencia\nota1-damus-tras-ban.jsonl&#39; 2&gt; &#39;.\evidencia\req1-damus-tras-ban.txt&#39;
+nak req -i $id1 wss://nos.lol 1&gt; &#39;.\evidencia\nota1-noslol-tras-ban.jsonl&#39; 2&gt; &#39;.\evidencia\req1-noslol-tras-ban.txt&#39;
+Get-Content -LiteralPath &#39;.\evidencia\nota2-damus.jsonl&#39;,&#39;.\evidencia\nota2-noslol.jsonl&#39;,&#39;.\evidencia\nota2-clase.jsonl&#39;
+Get-Content -LiteralPath &#39;.\evidencia\nota1-damus-tras-ban.jsonl&#39;,&#39;.\evidencia\nota1-noslol-tras-ban.jsonl&#39;
+Get-Content -LiteralPath &#39;.\evidencia\req2-damus.txt&#39;,&#39;.\evidencia\req2-noslol.txt&#39;,&#39;.\evidencia\req2-clase.txt&#39;,&#39;.\evidencia\req1-damus-tras-ban.txt&#39;,&#39;.\evidencia\req1-noslol-tras-ban.txt&#39;</code></pre></details>
+<details><summary>Bloque 11 · Retirar la llave del entorno y cerrar la terminal</summary><pre><code>Remove-Item Env:NOSTR_SECRET_KEY -ErrorAction SilentlyContinue
+exit</code></pre></details>
+      </section>
+
+      <section id="fuentes">
+        <span class="section-no">09 / Documentos de apoyo</span>
+        <h2>Archivos y fuentes del trabajo.</h2>
+        <div class="file-links"><a href="README.md"><strong>README.md ↗</strong><span>Guía completa de ejecución para PowerShell.</span></a><a href="CARNET.md"><strong>CARNET.md ↗</strong><span>Plantilla del único entregable, aún pendiente.</span></a><a href="ESTADO.md"><strong>ESTADO.md ↗</strong><span>Registro de comprobaciones y dependencias.</span></a><a href=".gitignore"><strong>.gitignore ↗</strong><span>Exclusiones de herramientas y archivos sensibles.</span></a></div>
+        <p class="small">Los enlaces a archivos requieren mantener el HTML junto a ellos. El contenido explicativo y los comandos están incluidos en este documento y pueden leerse sin conexión. El navegador puede mostrar o descargar los archivos Markdown según su configuración.</p>
+        <h3>Fuentes oficiales consultadas en la preparación</h3>
+        <ul class="sources">
+          <li><a href="https://github.com/fiatjaf/nak">Repositorio oficial de nak</a> y <a href="https://github.com/fiatjaf/nak/releases/latest">Releases oficiales</a>: instalación y herramienta.</li>
+          <li><a href="https://github.com/fiatjaf/nak/blob/master/main.go">main.go</a>: variable de entorno para la llave.</li>
+          <li><a href="https://github.com/fiatjaf/nak/blob/master/key.go">key.go</a>: generación y derivación de la pública.</li>
+          <li><a href="https://github.com/fiatjaf/nak/blob/master/event.go">event.go</a>: firma y envío de eventos ya firmados.</li>
+          <li><a href="https://github.com/fiatjaf/nak/blob/master/verify.go">verify.go</a>: comprobación de ID y firma, y salida silenciosa en éxito.</li>
+          <li><a href="https://github.com/nostr-protocol/nips/blob/master/01.md">NIP-01</a>: estructura del evento, serialización, firma y mensajes.</li>
+          <li><a href="https://docs.google.com/document/d/177jOpZfM7YUrB78Hr8Hy0YhYB1fYpgCKhbTrkYZKKYc/edit">Documento de la sesión</a>: enlace del enunciado; su contenido no fue accesible con la herramienta.</li>
+        </ul>
+        <p>Los requisitos de tiempos, contenido, límites y evaluación se tomaron del enunciado compartido por el estudiante. El código oficial consultado puede evolucionar; al instalar, hay que registrar la versión utilizada.</p>
+      </section>
+    </main>
+  </div>
+  <footer class="footer"><span>CS031 · Lab 19 · Sesión 22</span><span>Memoria de preparación · Resultados de Nostr pendientes · 19.10.2026</span></footer>
+  <script>
+    (() => {
+      const original = 'CS031 Lab 19 · nota de prueba';
+      const altered = 'CS031 Lab 19 · nota de pruebb';
+      const originalButton = document.getElementById('original-button');
+      const alteredButton = document.getElementById('altered-button');
+      const hashOutput = document.getElementById('demo-hash');
+      let sequence = 0;
+      async function showHash(isAltered) {
+        const current = ++sequence;
+        const text = isAltered ? altered : original;
+        document.getElementById('demo-text').textContent = text;
+        originalButton.setAttribute('aria-pressed', String(!isAltered));
+        alteredButton.setAttribute('aria-pressed', String(isAltered));
+        document.getElementById('demo-state').textContent = isAltered
+          ? 'Una letra distinta produce otra huella. Esta comparación es didáctica; la prueba real con nak sigue pendiente.'
+          : 'Esta es la huella de referencia del texto. El ID Nostr incluye además la llave pública, la fecha, el tipo y las etiquetas.';
+        if (!globalThis.crypto || !globalThis.crypto.subtle || !globalThis.TextEncoder) {
+          hashOutput.textContent = 'Web Crypto no está disponible en este navegador o contexto. El resto del informe funciona sin esta demostración.';
+          return;
+        }
+        try {
+          const bytes = new TextEncoder().encode(text);
+          const digest = await crypto.subtle.digest('SHA-256', bytes);
+          if (current !== sequence) return;
+          hashOutput.textContent = Array.from(new Uint8Array(digest), value => value.toString(16).padStart(2, '0')).join('');
+        } catch (error) {
+          if (current === sequence) hashOutput.textContent = 'No se pudo calcular la demostración local. Consulta la explicación del hash en el informe.';
+        }
+      }
+      originalButton.addEventListener('click', () => showHash(false));
+      alteredButton.addEventListener('click', () => showHash(true));
+      const expandedForPrint = [];
+      window.addEventListener('beforeprint', () => {
+        document.querySelectorAll('details:not([open])').forEach(detail => {
+          expandedForPrint.push(detail);
+          detail.open = true;
+        });
+      });
+      window.addEventListener('afterprint', () => {
+        expandedForPrint.splice(0).forEach(detail => { detail.open = false; });
+      });
+      document.getElementById('print-button').addEventListener('click', () => window.print());
+      showHash(false);
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+# Herramientas locales; no forman parte del entregable.
+.tools/
+
+# Nunca guardar llaves, ni siquiera de test.
+.env
+.env.*
+*.nsec
+*.key
+*secret*
+
+# Historial y transcripciones de terminal.
+*transcript*
+ConsoleHost_history.txt
